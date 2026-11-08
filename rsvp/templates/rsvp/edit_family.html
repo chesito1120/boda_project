@@ -1,51 +1,153 @@
+{% extends 'base.html' if base_exists else '' %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Familia - Control de Invitados</title>
+    <title>Panel de Novios - Gestión de Invitar a Boda</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-stone-100 text-stone-800 min-h-screen p-4 sm:p-6 flex items-center justify-center">
-    <div class="max-w-xl w-full bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-lg space-y-6">
-        <div>
-            <h1 class="text-xl font-bold text-stone-900">Editar Invitado / Familia</h1>
-            <p class="text-xs text-stone-500 mt-1">Actualiza los datos o modifica los boletos asignados.</p>
-        </div>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
 
-        <form method="POST" class="space-y-4">
-            {% csrf_token %}
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header Principal -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-slate-200 gap-4">
             <div>
-                <label class="block text-xs font-semibold text-stone-700 mb-1">Nombre / Familia:</label>
-                {{ form.name }}
+                <h1 class="text-3xl font-bold text-slate-900">Dashboard de Novios 💍</h1>
+                <p class="text-slate-500 text-sm">Gestiona tus invitados, pases y asignación de mesas</p>
             </div>
-            <div>
-                <label class="block text-xs font-semibold text-stone-700 mb-1">WhatsApp (10 dígitos):</label>
-                {{ form.contact_phone }}
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-stone-700 mb-1">Boletos asignados:</label>
-                {{ form.assigned_tickets }}
-            </div>
-
-            {% if family.is_locked %}
-                <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center gap-2">
-                    <input type="checkbox" name="unlock_rsvp" value="1" id="unlock_rsvp" class="rounded text-amber-600 focus:ring-amber-500">
-                    <label for="unlock_rsvp" class="cursor-pointer font-medium">
-                        Desbloquear invitación (Permitir que la familia vuelva a confirmar o cambiar nombres)
-                    </label>
-                </div>
-            {% endif %}
-
-            <div class="flex gap-3 pt-2">
-                <button type="submit" class="flex-1 bg-stone-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-stone-800 transition">
-                    Guardar Cambios
-                </button>
-                <a href="{% url 'couples_dashboard' %}" class="bg-stone-100 text-stone-700 px-5 py-3 rounded-xl font-medium text-sm hover:bg-stone-200 transition text-center">
-                    Cancelar
+            <div class="flex gap-3">
+                <a href="{% url 'checkin_dashboard' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+                    📱 Panel de Check-in (Staff)
+                </a>
+                <a href="/admin/" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold px-4 py-2 rounded-xl transition">
+                    ⚙️ Django Admin
                 </a>
             </div>
-        </form>
+        </header>
+
+        <!-- Métricas Rápidas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Familias Registradas</p>
+                <p class="text-3xl font-extrabold text-slate-800 mt-2">{{ families|length }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Boletos Asignados</p>
+                <p class="text-3xl font-extrabold text-indigo-600 mt-2">{{ total_assigned }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Confirmados</p>
+                <p class="text-3xl font-extrabold text-emerald-600 mt-2">{{ total_confirmed }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pendientes</p>
+                <p class="text-3xl font-extrabold text-amber-500 mt-2">{{ total_pending }}</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Formulario de Registro de Familia -->
+            <div class="lg:col-span-1">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-6">
+                    <h2 class="text-xl font-bold text-slate-900 mb-4">Registrar Nueva Familia</h2>
+                    
+                    <form method="POST" action="{% url 'couples_dashboard' %}" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nombre de la Familia o Grupo</label>
+                            <input type="text" name="name" required placeholder="Ej: Familia Caballero Soria" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Teléfono (WhatsApp)</label>
+                            <input type="text" name="contact_phone" placeholder="Ej: 3312345678" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Boletos</label>
+                                <input type="number" name="assigned_tickets" min="1" value="2" required class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Mesa</label>
+                                <input type="text" name="table_number" placeholder="Ej: Mesa 4" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 rounded-xl transition text-sm shadow-md">
+                            + Agregar Familia
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Listado de Familias -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-slate-900">Lista de Invitados</h2>
+                        <span class="text-xs bg-slate-100 text-slate-600 font-bold px-2.5 py-1 rounded-full">{{ families|length }} registros</span>
+                    </div>
+
+                    <div class="divide-y divide-slate-100">
+                        {% for family in families %}
+                        <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-slate-50 transition">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <h3 class="font-bold text-slate-900 text-base">{{ family.name }}</h3>
+                                    {% if family.table_number %}
+                                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-md border border-amber-200">
+                                            🍽️ {{ family.table_number }}
+                                        </span>
+                                    {% else %}
+                                        <span class="bg-slate-100 text-slate-400 text-xs font-semibold px-2 py-0.5 rounded-md">
+                                            Sin Mesa
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <p class="text-xs text-slate-500 flex items-center gap-3">
+                                    <span>📞 {{ family.contact_phone|default:"Sin teléfono" }}</span>
+                                    <span>🎟️ {{ family.assigned_tickets }} Pases</span>
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                                <!-- Enlace Pase Digital -->
+                                <a href="{% url 'invitation_view' family.access_token %}" target="_blank" title="Ver pase digital" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-2 rounded-xl text-xs font-semibold transition">
+                                    👁️ Invitación
+                                </a>
+
+                                <!-- Editar -->
+                                <a href="{% url 'edit_family' family.id %}" title="Editar información" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded-xl text-xs font-semibold transition">
+                                    ✏️ Editar
+                                </a>
+
+                                <!-- Eliminar (Formulario seguro con CSRF) -->
+                                <form method="POST" action="{% url 'delete_family' family.id %}" onsubmit="return confirm('¿Estás seguro de eliminar a la familia {{ family.name }}? Esta acción no se puede deshacer.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-xl text-xs font-semibold transition">
+                                        🗑️ Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="p-12 text-center text-slate-400">
+                            <p class="text-4xl mb-2">💌</p>
+                            <p class="font-medium text-slate-600">No hay familias registradas todavía.</p>
+                            <p class="text-xs mt-1">Agrega tu primera familia desde el formulario de la izquierda.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </body>
 </html>
