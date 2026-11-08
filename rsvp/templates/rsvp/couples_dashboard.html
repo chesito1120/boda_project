@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Novios - Control de Invitados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-100 text-stone-800 min-h-screen p-4 sm:p-6 pb-20">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl border border-stone-200 shadow-sm gap-4">
+            <div>
+                <h1 class="text-2xl font-serif text-stone-900">Control de Invitados</h1>
+                <p class="text-xs text-stone-500 mt-1">Registra, edita y gestiona las invitaciones de tu boda.</p>
+            </div>
+            <a href="{% url 'checkin_dashboard' %}" class="text-xs bg-stone-900 text-white px-4 py-2.5 rounded-xl font-medium hover:bg-stone-800 transition">
+                Ir al Escáner / Check-in ➔
+            </a>
+        </div>
+
+        <!-- Tarjetas de Métricas Clicables (Filtros en tiempo real) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button onclick="filterStatus('ALL')" class="metric-btn active bg-white p-4 rounded-xl border-2 border-stone-800 shadow-sm text-center transition hover:scale-102 focus:outline-none" id="btn-filter-all">
+                <span class="text-xs text-stone-500 uppercase tracking-wider block font-semibold">Total Familias</span>
+                <span class="text-2xl font-bold text-stone-900 mt-1 block">{{ total_families }}</span>
+            </button>
+            <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm text-center">
+                <span class="text-xs text-stone-500 uppercase tracking-wider block font-semibold">Boletos Repartidos</span>
+                <span class="text-2xl font-bold text-stone-900 mt-1 block">{{ total_assigned }}</span>
+            </div>
+            <button onclick="filterStatus('CONFIRMED')" class="metric-btn bg-white p-4 rounded-xl border border-stone-200 shadow-sm text-center transition hover:scale-102 focus:outline-none" id="btn-filter-confirmed">
+                <span class="text-xs text-stone-500 uppercase tracking-wider block font-semibold">Confirmados</span>
+                <span class="text-2xl font-bold text-green-600 mt-1 block">{{ total_confirmed }}</span>
+            </button>
+            <button onclick="filterStatus('PENDING')" class="metric-btn bg-white p-4 rounded-xl border border-stone-200 shadow-sm text-center transition hover:scale-102 focus:outline-none" id="btn-filter-pending">
+                <span class="text-xs text-stone-500 uppercase tracking-wider block font-semibold">Pendientes</span>
+                <span class="text-2xl font-bold text-amber-600 mt-1 block">{{ pending_count }}</span>
+            </button>
+        </div>
+
+        <!-- Formulario de Alta de Invitados -->
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-sm">
+            <h2 class="text-lg font-bold text-stone-900 mb-4">Registrar Nueva Familia o Invitado</h2>
+            
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-1">
+                        <label class="block text-xs font-semibold text-stone-700 mb-1">Nombre / Familia:</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label class="block text-xs font-semibold text-stone-700 mb-1">WhatsApp (10 dígitos):</label>
+                        {{ form.contact_phone }}
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label class="block text-xs font-semibold text-stone-700 mb-1">Boletos asignados:</label>
+                        {{ form.assigned_tickets }}
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full sm:w-auto bg-stone-900 text-white px-8 py-3 rounded-xl font-medium text-sm hover:bg-stone-800 transition">
+                    + Registrar Familia
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de Familias Registradas -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-stone-900" id="list-title">Familias Registradas</h2>
+                <span id="current-filter-badge" class="text-xs px-2.5 py-1 bg-stone-100 text-stone-600 font-semibold rounded-lg">Mostrando: Todas</span>
+            </div>
+
+            <div class="divide-y divide-stone-100" id="families-container">
+                {% for item in family_cards %}
+                    <div class="family-item py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3" data-status="{{ item.obj.status }}">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <p class="font-bold text-stone-900 uppercase tracking-wide">{{ item.obj.name }}</p>
+                                <span class="text-xs px-2 py-0.5 rounded-full font-medium
+                                    {% if item.obj.status == 'CONFIRMED' %}bg-green-100 text-green-800
+                                    {% elif item.obj.status == 'DECLINED' %}bg-red-100 text-red-800
+                                    {% else %}bg-amber-100 text-amber-800{% endif %}">
+                                    {{ item.obj.get_status_display }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-stone-500 mt-1">
+                                Boletos: <strong>{{ item.obj.confirmed_tickets }}/{{ item.obj.assigned_tickets }}</strong> • 
+                                Tel: {{ item.obj.contact_phone|default:"Sin teléfono" }}
+                            </p>
+                        </div>
+
+                        <!-- Acciones CRUD + WhatsApp -->
+                        <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+                            {% if item.wa_url %}
+                                <a href="{{ item.wa_url }}" target="_blank" 
+                                   class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1 shadow-sm">
+                                    💬 WhatsApp
+                                </a>
+                            {% endif %}
+                            <a href="{{ item.invitation_link }}" target="_blank" 
+                               class="bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-2 rounded-xl text-xs font-medium transition">
+                                Ver Boleto
+                            </a>
+                            <a href="{% url 'edit_family' item.obj.id %}" 
+                               class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl text-xs font-medium transition">
+                                ✏️ Editar
+                            </a>
+                            <form action="{% url 'delete_family' item.obj.id %}" method="POST" onsubmit="return confirm('¿Eliminar a {{ item.obj.name }} y sus boletos?');" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-2 rounded-xl text-xs font-medium transition">
+                                    🗑️
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-sm text-stone-400 text-center py-6">Aún no hay familias registradas.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de Filtros Instantáneos por Tarjeta -->
+    <script>
+        function filterStatus(status) {
+            const items = document.querySelectorAll('.family-item');
+            const badge = document.getElementById('current-filter-badge');
+            
+            // Estilos de botones activos
+            document.querySelectorAll('.metric-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-stone-800');
+                btn.classList.add('border-stone-200');
+            });
+
+            if (status === 'ALL') {
+                document.getElementById('btn-filter-all').classList.add('border-2', 'border-stone-800');
+                badge.textContent = 'Mostrando: Todas';
+            } else if (status === 'CONFIRMED') {
+                document.getElementById('btn-filter-confirmed').classList.add('border-2', 'border-stone-800');
+                badge.textContent = 'Mostrando: Confirmadas';
+            } else if (status === 'PENDING') {
+                document.getElementById('btn-filter-pending').classList.add('border-2', 'border-stone-800');
+                badge.textContent = 'Mostrando: Pendientes';
+            }
+
+            // Ocultar / Mostrar filas
+            items.forEach(item => {
+                if (status === 'ALL' || item.dataset.status === status) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

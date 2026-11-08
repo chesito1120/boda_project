@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Boda | Invitación Digital</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cormorant Garamond & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .font-serif-title { font-family: 'Cormorant Garamond', Georgia, serif; }
+        .font-sans-body { font-family: 'Montserrat', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#FAF8F5] text-stone-700 font-sans-body antialiased selection:bg-amber-100">
+
+    <!-- PORTADA / HERO SECTION -->
+    <header class="relative min-h-[85vh] flex flex-col items-center justify-center text-center px-4 bg-gradient-to-b from-stone-200/50 via-[#FAF8F5] to-[#FAF8F5]">
+        <!-- Monograma -->
+        <div class="w-16 h-16 sm:w-20 sm:h-20 border border-stone-400/60 rounded-full flex items-center justify-center mb-6 text-stone-600 font-serif-title text-2xl tracking-widest shadow-inner">
+            N & N
+        </div>
+        
+        <p class="text-xs uppercase tracking-[0.3em] text-stone-500 mb-3 font-medium">Nuestra Boda</p>
+        <h1 class="text-5xl sm:text-7xl font-serif-title text-stone-900 tracking-tight mb-4">
+            Novia & Novio
+        </h1>
+        
+        <div class="flex items-center gap-4 my-2 text-stone-400">
+            <span class="h-[1px] w-12 bg-stone-300"></span>
+            <span class="text-xs uppercase tracking-[0.25em] text-stone-600 font-medium">Sábado, 14 de Noviembre 2026</span>
+            <span class="h-[1px] w-12 bg-stone-300"></span>
+        </div>
+
+        <p class="text-xs sm:text-sm text-stone-500 italic font-serif-title mt-4 max-w-md">
+            "El amor no se mira con los ojos, sino con el alma."
+        </p>
+
+        <!-- Botón ancla directo a confirmar -->
+        <a href="#rsvp" class="mt-8 px-6 py-2.5 border border-stone-800 text-stone-900 hover:bg-stone-900 hover:text-white transition-all duration-300 rounded-full text-xs uppercase tracking-widest font-medium">
+            Confirmar Asistencia ↓
+        </a>
+    </header>
+
+    <!-- ITINERARIO / DETALLES DEL EVENTO -->
+    <section class="max-w-4xl mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <p class="text-xs uppercase tracking-[0.25em] text-stone-400 font-medium">Dónde & Cuándo</p>
+            <h2 class="text-3xl sm:text-4xl font-serif-title text-stone-900 mt-1">Detalles del Evento</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Ceremonia -->
+            <div class="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm text-center flex flex-col justify-between">
+                <div>
+                    <span class="text-3xl block mb-3">⛪</span>
+                    <h3 class="text-2xl font-serif-title text-stone-900 mb-1">Ceremonia Religiosa</h3>
+                    <p class="text-xs text-amber-700 font-semibold tracking-wider uppercase mb-4">5:00 PM</p>
+                    <p class="text-sm font-medium text-stone-800">Parroquia de San Pedro</p>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed">Calle Hidalgo #120, Centro Histórico</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-stone-100">
+                    <a href="https://maps.google.com" target="_blank" class="inline-block text-xs uppercase tracking-widest text-stone-600 hover:text-stone-950 font-semibold border-b border-stone-400 pb-0.5">
+                        Ver en Google Maps ↗
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recepción -->
+            <div class="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm text-center flex flex-col justify-between">
+                <div>
+                    <span class="text-3xl block mb-3">🥂</span>
+                    <h3 class="text-2xl font-serif-title text-stone-900 mb-1">Recepción & Fiesta</h3>
+                    <p class="text-xs text-amber-700 font-semibold tracking-wider uppercase mb-4">7:30 PM</p>
+                    <p class="text-sm font-medium text-stone-800">Hacienda Las Magnolias</p>
+                    <p class="text-xs text-stone-500 mt-1 leading-relaxed">Av. Jardines del Bosque #450</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-stone-100">
+                    <a href="https://maps.google.com" target="_blank" class="inline-block text-xs uppercase tracking-widest text-stone-600 hover:text-stone-950 font-semibold border-b border-stone-400 pb-0.5">
+                        Ver en Google Maps ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CÓDIGO DE VESTIMENTA Y DETALLES -->
+    <section class="max-w-2xl mx-auto px-4 py-8 text-center border-y border-stone-200">
+        <p class="text-xs uppercase tracking-[0.25em] text-stone-400 font-medium">Código de Vestimenta</p>
+        <h3 class="text-2xl font-serif-title text-stone-900 mt-1 mb-2">Formal / Rigurosa Etiqueta</h3>
+        <p class="text-xs text-stone-500 max-w-md mx-auto leading-relaxed">
+            Agradecemos reservar los colores blancos e ivory exclusivamente para la novia.
+        </p>
+    </section>
+
+    <!-- SECCIÓN RSVP / FORMULARIO O BOLETO -->
+    <section id="rsvp" class="max-w-xl mx-auto px-4 py-16">
+        <div class="bg-white rounded-3xl shadow-xl p-8 sm:p-10 border border-stone-200/80">
+            
+            <div class="text-center mb-8">
+                <span class="text-xs uppercase tracking-[0.25em] text-stone-400 font-semibold block mb-1">Pase Exclusivo</span>
+                <h2 class="text-3xl font-serif-title text-stone-900 uppercase tracking-wide">{{ family.name }}</h2>
+                <div class="h-0.5 w-10 bg-stone-300 mx-auto my-3"></div>
+                <p class="text-xs text-stone-500">Por favor confirma antes del 30 de Octubre</p>
+            </div>
+
+            {% if family.is_locked %}
+                <!-- VISTA TRAS CONFIRMAR: BOLETO DIGITAL CON QR -->
+                {% if family.status == 'CONFIRMED' %}
+                    <div class="text-center space-y-6">
+                        <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl">
+                            <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold tracking-wider uppercase mb-2">
+                                ✓ Asistencia Confirmada
+                            </span>
+                            <p class="text-sm font-medium text-stone-800">
+                                Lugares reservados: <strong>{{ family.confirmed_tickets }} de {{ family.assigned_tickets }}</strong>
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col items-center justify-center p-6 bg-stone-50 rounded-2xl border border-dashed border-stone-300">
+                            <img src="{% url 'qr_code_view' family.id %}" alt="Código QR de Acceso" 
+                                 class="w-48 h-48 rounded-xl shadow-sm bg-white p-2 border border-stone-200">
+                            <p class="text-xs text-stone-500 mt-3">Muestra este código al ingresar en recepción.</p>
+                        </div>
+
+                        <div class="text-left bg-stone-50 p-5 rounded-2xl border border-stone-200">
+                            <p class="text-xs uppercase tracking-wider font-semibold text-stone-500 mb-3">Pases Registrados:</p>
+                            <ul class="space-y-1.5 text-sm text-stone-800">
+                                {% for guest in family.guests.all %}
+                                    <li class="flex items-center gap-2">
+                                        <span class="text-stone-400 text-xs">✦</span>
+                                        <span>{{ guest.full_name }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <p class="text-xs text-stone-400 italic">
+                            Si necesitas realizar algún ajuste o tienes dudas, por favor contacta directamente a los novios.
+                        </p>
+                    </div>
+                {% else %}
+                    <!-- DEclinada -->
+                    <div class="text-center p-8 bg-stone-50 rounded-2xl border border-stone-200">
+                        <p class="text-base font-serif-title text-stone-800">Lamentamos que no puedan acompañarnos.</p>
+                        <p class="text-xs text-stone-500 mt-2">Estarán presentes en nuestros corazones en este día tan especial.</p>
+                    </div>
+                {% endif %}
+
+            {% else %}
+                <!-- FORMULARIO DE CONFIRMACIÓN -->
+                <form method="POST" id="rsvp-form" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="bg-stone-50 border border-stone-200 p-4 rounded-2xl text-center">
+                        <p class="text-xs text-stone-500">Boletos disponibles para tu familia:</p>
+                        <p class="text-2xl font-serif-title text-stone-900 font-bold mt-0.5">
+                            Hasta {{ family.assigned_tickets }} {{ family.assigned_tickets|pluralize:"lugar,lugares" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider font-medium text-stone-600 mb-2">
+                            ¿Cuántos asistirán?
+                        </label>
+                        <select id="ticket-count" class="w-full border border-stone-300 rounded-xl p-3 bg-white text-stone-900 text-sm focus:ring-2 focus:ring-stone-800 focus:outline-none">
+                            {% for i in "x"|rjust:family.assigned_tickets %}
+                                <option value="{{ forloop.counter }}">{{ forloop.counter }} lugar(es)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="guests-container" class="space-y-3">
+                        <label class="block text-xs uppercase tracking-wider font-medium text-stone-600">
+                            Nombres de los asistentes:
+                        </label>
+                    </div>
+
+                    <div class="pt-4 space-y-3">
+                        <button type="submit" name="action" value="confirm" 
+                                class="w-full bg-stone-900 text-white py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-stone-800 transition shadow-md">
+                            Confirmar Asistencia
+                        </button>
+                        <button type="submit" name="action" value="decline" 
+                                onclick="return confirm('¿Seguro que no podrán acompañarnos?');" 
+                                class="w-full text-stone-400 hover:text-red-700 py-2 text-xs uppercase tracking-wider transition">
+                            No podremos asistir
+                        </button>
+                    </div>
+                </form>
+
+                <script>
+                    const select = document.getElementById('ticket-count');
+                    const container = document.getElementById('guests-container');
+
+                    function updateInputs() {
+                        const count = parseInt(select.value);
+                        container.innerHTML = '<label class="block text-xs uppercase tracking-wider font-medium text-stone-600 mb-1">Nombres de los asistentes:</label>';
+                        for (let i = 1; i <= count; i++) {
+                            const div = document.createElement('div');
+                            div.innerHTML = `
+                                <input type="text" name="guest_names[]" required placeholder="Nombre completo ${i}" 
+                                    class="w-full border border-stone-300 rounded-xl p-3 text-sm mb-2 focus:ring-2 focus:ring-stone-800 focus:outline-none bg-stone-50/50">
+                            `;
+                            container.appendChild(div);
+                        }
+                    }
+
+                    select.addEventListener('change', updateInputs);
+                    updateInputs();
+                </script>
+            {% endif %}
+
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="text-center py-12 text-stone-400 text-xs border-t border-stone-200/60">
+        <p class="font-serif-title text-base text-stone-600 mb-1">Novia & Novio</p>
+        <p>14 . 11 . 2026</p>
+    </footer>
+
+</body>
+</html>
