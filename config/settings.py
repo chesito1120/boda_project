@@ -10,20 +10,21 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-f)9j*vql*yf0u1p544%cl+#$p-7#p(g(#0!cbact29&h%oml6e'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-f)9j*vql*yf0u1p544%cl+#$p-7#p(g(#0!cbact29&h%oml6e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -37,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rsvp',  # <--- Tu app
+    'rsvp',  # Tu aplicación
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Soporte para archivos estáticos en producción
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -54,7 +57,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'rsvp' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,16 +75,25 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Configuración Base para entorno Local
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'wedding_db',
-        'USER': 'postgres',         # Ajusta a tu usuario de postgres si es diferente
-        'PASSWORD': 'tu_password',  # Pon tu contraseña de postgres aquí
+        'USER': 'postgres',
+        'PASSWORD': 'tu_password',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
+# Si existe la variable DATABASE_URL en Railway, sobrescribe con PostgreSQL de producción
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 
 
 # Password validation
@@ -106,9 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-mx'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
@@ -119,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
